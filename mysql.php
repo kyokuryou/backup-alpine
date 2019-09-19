@@ -84,16 +84,17 @@ function insertSQL($row, $fields, $tableName)
     return $insert;
 }
 
-if (!file_exists($backupPath)) {
-    mkdir($backupPath, 0777, true);
-}
 $dbs = explode(",", $database);
 foreach ($dbs as $db) {
+    $backupPath = "/usr/src/backup/data/$db/";
+    if (!file_exists($backupPath)) {
+        mkdir($backupPath, 0777, true);
+    }
     $link = mysqli_connect($host, $user, $password, $db, $port);
     if (!$link) {
         die('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
     }
-    $fileName = $backupPath . $db . "_" . date('YmdHis') . '.sql';
+    $fileName = $backupPath . date('YmdHis') . '.sql';
     file_put_contents($fileName, "/*\n", FILE_APPEND);
     file_put_contents($fileName, "MySQL Backup\n", FILE_APPEND);
     file_put_contents($fileName, "Database: $db\n", FILE_APPEND);
